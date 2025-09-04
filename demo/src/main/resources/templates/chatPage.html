@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چت مدرن شیشه‌ای</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Vazirmatn for Persian UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            overflow: hidden;
+        }
+
+        /* Animated Gradient Background */
+        .main-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #03045e, #0077b6, #00b4d8, #90e0ef, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+        }
+
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.5); }
+
+        /* Transitions for smooth effects */
+        .contact-item, .icon-btn, .message-bubble {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .video-modal {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen p-4 flex justify-center items-center">
+<div class="main-bg"></div>
+
+<div id="app" class="h-full w-full max-w-7xl flex antialiased glass-panel shadow-2xl overflow-hidden">
+    <div class="flex flex-row h-full w-full">
+
+        <!-- Sidebar: Contacts List -->
+        <aside class="flex flex-col w-full md:w-80 lg:w-96 border-l border-white/10 shrink-0">
+            <!-- Sidebar Header -->
+            <header class="flex items-center justify-between p-4 border-b border-white/10">
+                <h2 class="text-xl font-bold text-white">پیام‌ها</h2>
+                <button class="p-2 rounded-full hover:bg-white/20 icon-btn">
+                    <i class="fa-solid fa-pen-to-square text-lg text-white"></i>
+                </button>
+            </header>
+
+            <!-- Contacts List -->
+            <div id="contacts-list" class="flex flex-col flex-auto p-2 overflow-y-auto custom-scrollbar space-y-2">
+                <!-- Sample Contact (Active) -->
+                <div class="contact-item flex items-center p-3 cursor-pointer rounded-xl bg-white/20" data-contact-id="1" data-contact-name="مریم احمدی" data-avatar-url="https://placehold.co/100x100/0077b6/white?text=م">
+                    <img src="https://placehold.co/100x100/0077b6/white?text=م" class="h-14 w-14 rounded-full object-cover shrink-0 border-2 border-white/50" alt="Avatar">
+                    <div class="flex-grow pr-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-white">مریم احمدی</span>
+                            <span class="text-xs text-gray-300">۱۰:۲۰</span>
+                        </div>
+                        <p class="text-sm text-gray-300 truncate">سلام! چطوری؟ پروژه رو دیدی؟</p>
+                    </div>
+                </div>
+
+                <!-- Other Contacts -->
+                <div class="contact-item flex items-center p-3 cursor-pointer rounded-xl hover:bg-white/10" data-contact-id="2" data-contact-name="علی رضایی" data-avatar-url="https://placehold.co/100x100/50d890/white?text=ع">
+                    <img src="https://placehold.co/100x100/50d890/white?text=ع" class="h-14 w-14 rounded-full object-cover shrink-0" alt="Avatar">
+                    <div class="flex-grow pr-4">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-white">علی رضایی</span>
+                            <span class="text-xs text-gray-400">دیروز</span>
+                        </div>
+                        <p class="text-sm text-gray-400 truncate">حتما، فردا جلسه می‌ذاریم.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="flex flex-col h-full w-full">
+            <!-- Chat Header -->
+            <header id="chat-header" class="flex items-center justify-between p-3 border-b border-white/10">
+                <div class="flex items-center">
+                    <img id="chat-avatar" src="https://placehold.co/100x100/0077b6/white?text=م" class="h-12 w-12 rounded-full object-cover" alt="Chat Avatar">
+                    <div class="pr-4">
+                        <p id="chat-name" class="text-lg font-semibold text-white">مریم احمدی</p>
+                        <p class="text-sm text-green-400">آنلاین</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-i-2">
+                    <button id="video-call-btn" class="p-3 rounded-full hover:bg-white/20 icon-btn" title="تماس تصویری">
+                        <i class="fa-solid fa-video text-xl text-white"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Box -->
+            <div id="chat-box" class="flex-1 p-4 overflow-y-auto custom-scrollbar">
+                <div class="flex flex-col space-y-4">
+                    <!-- Messages are injected here -->
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <footer class="p-4">
+                <div class="flex items-center glass-panel p-2">
+                    <input type="text" id="message-input" class="w-full bg-transparent p-2 text-white placeholder-gray-300 focus:outline-none" placeholder="پیام خود را بنویسید...">
+                    <button class="p-3 rounded-full hover:bg-white/20 icon-btn">
+                        <i class="fa-regular fa-face-smile text-xl text-white"></i>
+                    </button>
+                    <button id="send-btn" class="p-3 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white shrink-0 mr-2 hover:opacity-90 icon-btn">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </footer>
+        </main>
+    </div>
+</div>
+
+<!-- Video Call Modal -->
+<div id="video-call-modal" class="fixed inset-0 bg-black/70 backdrop-blur-md flex-col justify-center items-center p-4 z-50 hidden opacity-0 scale-95">
+    <div class="relative w-full h-full max-w-5xl rounded-2xl overflow-hidden">
+        <!-- Remote Video -->
+        <div class="w-full h-full bg-gray-900 flex items-center justify-center">
+            <div class="text-center text-white">
+                <i class="fa-solid fa-video text-6xl mb-4"></i>
+                <h3 class="text-2xl font-bold" id="video-call-name">تماس با مریم احمدی...</h3>
+            </div>
+        </div>
+
+        <!-- Local Video -->
+        <div class="absolute top-4 right-4 w-48 h-32 bg-gray-800 rounded-lg border-2 border-white/20">
+            <!-- Local video stream would go here -->
+            <div class="flex items-center justify-center h-full text-white text-sm">ویدیوی شما</div>
+        </div>
+
+        <!-- Call Controls -->
+        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center space-i-4 glass-panel p-3">
+            <button class="w-14 h-14 rounded-full bg-white/20 hover:bg-white/30 icon-btn"><i class="fa-solid fa-microphone-slash text-white text-xl"></i></button>
+            <button id="end-call-btn" class="w-20 h-14 rounded-full bg-red-600 hover:bg-red-700 icon-btn"><i class="fa-solid fa-phone-slash text-white text-xl"></i></button>
+            <button class="w-14 h-14 rounded-full bg-white/20 hover:bg-white/30 icon-btn"><i class="fa-solid fa-video-slash text-white text-xl"></i></button>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- DOM Elements ---
+        const contactsList = document.getElementById('contacts-list');
+        const chatName = document.getElementById('chat-name');
+        const chatAvatar = document.getElementById('chat-avatar');
+        const chatBox = document.getElementById('chat-box').querySelector('div');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const videoCallBtn = document.getElementById('video-call-btn');
+        const videoCallModal = document.getElementById('video-call-modal');
+        const endCallBtn = document.getElementById('end-call-btn');
+        const videoCallName = document.getElementById('video-call-name');
+
+        // Mock Data
+        const conversations = {
+            '1': [{ type: 'received', text: 'سلام! چطوری؟', time: '۱۰:۱۸' }, { type: 'sent', text: 'سلام مریم جان، ممنون. عالی!', time: '۱۰:۱۹' }],
+            '2': [{ type: 'sent', text: 'سلام علی جان، وقت داری؟', time: 'دیروز' }, { type: 'received', text: 'سلام، بله حتما.', time: 'دیروز' }]
+        };
+        let activeContactId = '1';
+
+        // --- Functions ---
+        function renderMessages(contactId) {
+            chatBox.innerHTML = '';
+            (conversations[contactId] || []).forEach(msg => {
+                chatBox.appendChild(createMessageElement(msg));
+            });
+            scrollToBottom();
+        }
+
+        function createMessageElement(msg) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex items-end w-full ${msg.type === 'sent' ? 'justify-end' : 'justify-start'}`;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble relative max-w-xs md:max-w-md lg:max-w-lg px-4 py-3 rounded-2xl shadow';
+
+            if (msg.type === 'sent') {
+                bubble.className += ' bg-gradient-to-br from-blue-600 to-cyan-500 text-white rounded-br-lg';
+            } else {
+                bubble.className += ' bg-white/20 text-white rounded-bl-lg';
+            }
+
+            bubble.innerHTML = `<p class="text-sm">${msg.text}</p><span class="absolute bottom-1.5 left-3 text-xs opacity-70 mt-1">${msg.time}</span>`;
+            wrapper.appendChild(bubble);
+            return wrapper;
+        }
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (text === '') return;
+
+            const newMessage = {
+                type: 'sent',
+                text: text,
+                time: new Date().toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' })
+            };
+            conversations[activeContactId].push(newMessage);
+            chatBox.appendChild(createMessageElement(newMessage));
+            messageInput.value = '';
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatBox.parentElement.scrollTop = chatBox.parentElement.scrollHeight;
+        }
+
+        function switchContact(contactElement) {
+            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('bg-white/20'));
+            contactElement.classList.add('bg-white/20');
+
+            activeContactId = contactElement.dataset.contactId;
+            const name = contactElement.dataset.contactName;
+            const avatarUrl = contactElement.dataset.avatarUrl;
+
+            chatName.textContent = name;
+            chatAvatar.src = avatarUrl;
+
+            renderMessages(activeContactId);
+        }
+
+        function showVideoCall() {
+            videoCallName.textContent = `تماس با ${chatName.textContent}...`
+            videoCallModal.classList.remove('hidden');
+            setTimeout(() => {
+                videoCallModal.classList.remove('opacity-0', 'scale-95');
+                videoCallModal.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function hideVideoCall() {
+             videoCallModal.classList.remove('opacity-100', 'scale-100');
+             videoCallModal.classList.add('opacity-0', 'scale-95');
+             setTimeout(() => {
+                videoCallModal.classList.add('hidden');
+             }, 300);
+        }
+
+        // --- Event Listeners ---
+        contactsList.addEventListener('click', e => {
+            const contactItem = e.target.closest('.contact-item');
+            if (contactItem) switchContact(contactItem);
+        });
+        sendBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keydown', e => e.key === 'Enter' && sendMessage());
+        videoCallBtn.addEventListener('click', showVideoCall);
+        endCallBtn.addEventListener('click', hideVideoCall);
+
+        // --- Initial Load ---
+        renderMessages(activeContactId);
+    });
+</script>
+</body>
+</html>
+
